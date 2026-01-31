@@ -1,0 +1,5 @@
+<div class="menu-item" [class.active]="item.active">
+  <span class="menu-icon">{{ item.icon }}</span>
+  <span class="menu-label">{{ item.label }}</span>
+  <span class="menu-indicator" *ngIf="item.active"></span>
+</div>

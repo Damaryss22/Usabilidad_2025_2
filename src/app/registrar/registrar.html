@@ -1,0 +1,265 @@
+<div class="registro-wrapper">
+  <div class="registro-container">
+    <!-- Formulario de Registro -->
+    <div class="registro-card">
+      <div class="card-header">
+        <div class="logo-section">
+          <div class="logo-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="8.5" cy="7" r="4"/>
+              <polyline points="17 11 19 13 23 9"/>
+            </svg>
+          </div>
+          <h1>Crear Cuenta</h1>
+          <p>Únete a nuestra plataforma educativa</p>
+        </div>
+      </div>
+
+      <form (submit)="registrarEstudiante(); $event.preventDefault()" class="registro-form">
+        <!-- Nombre y Apellido -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nombre">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              Nombre *
+            </label>
+            <input
+              id="nombre"
+              type="text"
+              placeholder="Tu nombre"
+              [(ngModel)]="nuevoUsuario.nombre"
+              name="nombre"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="apellido">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              Apellido *
+            </label>
+            <input
+              id="apellido"
+              type="text"
+              placeholder="Tu apellido"
+              [(ngModel)]="nuevoUsuario.apellido"
+              name="apellido"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            Correo Electrónico *
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="ejemplo@correo.com"
+            [(ngModel)]="nuevoUsuario.email"
+            name="email"
+            required
+          />
+        </div>
+
+        <!-- Contraseña -->
+        <div class="form-group">
+          <label for="password">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Contraseña *
+          </label>
+          <div class="password-input-container">
+            <input
+              id="password"
+              [type]="mostrarPassword ? 'text' : 'password'"
+              placeholder="Mínimo 6 caracteres"
+              [(ngModel)]="nuevoUsuario.password"
+              name="password"
+              required
+            />
+            <button type="button" class="toggle-password" (click)="toggleMostrarPassword()">
+              <svg *ngIf="!mostrarPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg *ngIf="mostrarPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirmar Contraseña -->
+        <div class="form-group">
+          <label for="confirmar-password">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Confirmar Contraseña *
+          </label>
+          <div class="password-input-container">
+            <input
+              id="confirmar-password"
+              [type]="mostrarConfirmarPassword ? 'text' : 'password'"
+              placeholder="Repite tu contraseña"
+              [(ngModel)]="confirmarPassword"
+              name="confirmarPassword"
+              required
+            />
+            <button type="button" class="toggle-password" (click)="toggleMostrarConfirmarPassword()">
+              <svg *ngIf="!mostrarConfirmarPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg *ngIf="mostrarConfirmarPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Teléfono (Opcional) -->
+        <div class="form-group">
+          <label for="telefono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            Teléfono (Opcional)
+          </label>
+          <input
+            id="telefono"
+            type="tel"
+            placeholder="+593 999 999 999"
+            [(ngModel)]="nuevoUsuario.telefono"
+            name="telefono"
+          />
+        </div>
+
+        <!-- Carrera (Opcional) -->
+        <div class="form-group">
+          <label for="carrera">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            Carrera (Opcional)
+          </label>
+          <input
+            id="carrera"
+            type="text"
+            placeholder="Ej: Ingeniería en Sistemas"
+            [(ngModel)]="nuevoUsuario.carrera"
+            name="carrera"
+          />
+        </div>
+
+        <!-- Términos y Condiciones -->
+        <div class="checkbox-group">
+          <input
+            id="terminos"
+            type="checkbox"
+            [(ngModel)]="aceptaTerminos"
+            name="terminos"
+          />
+          <label for="terminos" class="checkbox-label">
+            Acepto los <a href="#" class="link">términos y condiciones</a> y la <a href="#" class="link">política de privacidad</a>
+          </label>
+        </div>
+
+        <!-- Botón de Registro -->
+        <button type="submit" class="btn-registrar" [disabled]="cargando">
+          <span *ngIf="!cargando">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="8.5" cy="7" r="4"/>
+              <polyline points="17 11 19 13 23 9"/>
+            </svg>
+            Crear Cuenta
+          </span>
+          <span *ngIf="cargando" class="loading-spinner">
+            <svg class="spinner" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/>
+              <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" stroke-width="4" fill="none"/>
+            </svg>
+            Registrando...
+          </span>
+        </button>
+      </form>
+
+      <!-- Link a Login -->
+      <div class="login-link">
+        <p>¿Ya tienes una cuenta? <a (click)="irALogin()" class="link-bold">Inicia sesión aquí</a></p>
+      </div>
+    </div>
+
+    <!-- Información Lateral -->
+    <div class="info-card">
+      <div class="info-content">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <h2>Bienvenido a tu Organizador de Tareas</h2>
+        <p class="info-description">Únete a nuestra plataforma y comienza a organizar tus actividades académicas de manera eficiente.</p>
+        
+        <div class="features-list">
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Gestiona tus tareas fácilmente</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Colabora con compañeros</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Organiza tu tiempo efectivamente</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Acceso desde cualquier dispositivo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- 🦶 Pie de página -->
+  <footer class="auth-footer">
+    <p>© 2025 Organiza tus Tareas. Todos los derechos reservados.</p>
+    <p class="footer-links">
+      <a routerLink="/terminos">Términos y Condiciones</a> |
+      <a routerLink="/privacidad">Política de Privacidad</a> |
+      <a routerLink="/contacto">Contacto</a>
+    </p>
+  </footer>

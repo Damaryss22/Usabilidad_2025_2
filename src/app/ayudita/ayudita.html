@@ -1,0 +1,109 @@
+<div class="ayudita-background">
+  <app-encabezado></app-encabezado>
+  <div class="ayudita-container">
+
+
+    <div class="ayudita-header">
+      <h1 class="page-title">❓ Centro de Ayuda</h1>
+      <p class="page-subtitle">Encuentra respuestas rápidas o contáctanos</p>
+    </div>
+
+    <!-- Preguntas Frecuentes -->
+    <section class="faq-section">
+      <h2 class="section-title">💡 Preguntas Frecuentes</h2>
+      
+      <div class="faq-list">
+        <div 
+          class="faq-item"
+          *ngFor="let faq of preguntasFrecuentes"
+          [class.expanded]="faq.expandido">
+          <div class="faq-question" (click)="togglePregunta(faq)">
+            <span class="faq-icon">{{ faq.expandido ? '▼' : '▶' }}</span>
+            <span class="faq-text">{{ faq.pregunta }}</span>
+          </div>
+          <div class="faq-answer" *ngIf="faq.expandido">
+            <p>{{ faq.respuesta }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guías Rápidas -->
+    <section class="guides-section">
+      <h2 class="section-title">📚 Guías Rápidas</h2>
+      
+      <div class="guides-grid">
+        <div class="guide-card">
+          <div class="guide-icon">🚀</div>
+          <h3 class="guide-title">Primeros Pasos</h3>
+          <p class="guide-description">Aprende a usar el organizador de tareas desde cero</p>
+        </div>
+        
+        <div class="guide-card">
+          <div class="guide-icon">📝</div>
+          <h3 class="guide-title">Gestión de Tareas</h3>
+          <p class="guide-description">Crea, edita y organiza tus tareas eficientemente</p>
+        </div>
+        
+        <div class="guide-card">
+          <div class="guide-icon">📊</div>
+          <h3 class="guide-title">Seguimiento</h3>
+          <p class="guide-description">Monitorea tu progreso y estadísticas</p>
+        </div>
+        
+        <div class="guide-card">
+          <div class="guide-icon">⚙️</div>
+          <h3 class="guide-title">Configuración</h3>
+          <p class="guide-description">Personaliza tu experiencia en la plataforma</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulario de Contacto -->
+    <section class="contact-section">
+      <h2 class="section-title">✉️ Soporte Técnico</h2>
+      <p class="section-subtitle">¿Problemas con la aplicación? Contáctanos.</p>
+      
+      <form class="contact-form" (ngSubmit)="enviarConsulta()">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              [(ngModel)]="nombre"
+              name="nombre"
+              placeholder="Tu nombre completo">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input 
+              type="email" 
+              class="form-input" 
+              [(ngModel)]="email"
+              name="email"
+              placeholder="tu@email.com">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Mensaje</label>
+          <textarea 
+            class="form-textarea" 
+            [(ngModel)]="mensaje"
+            name="mensaje"
+            rows="6"
+            placeholder="Describe tu consulta o problema..."></textarea>
+        </div>
+        
+        <button type="submit" class="btn-submit">
+          Enviar Consulta
+        </button>
+      </form>
+    </section>
+
+  </div>
+
+  <app-footer></app-footer>
+</div>

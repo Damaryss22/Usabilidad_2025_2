@@ -1,0 +1,559 @@
+/* ================================================
+   ❓ AYUDITA COMPONENT - Con soporte para modo oscuro
+   ================================================ */
+
+.ayudita-background {
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Modo claro: fondo personalizado */
+:host-context(body:not(.dark-mode)) .ayudita-background {
+  background-color: #1F2041;
+}
+
+/* Modo oscuro: usa variable */
+:host-context(body.dark-mode) .ayudita-background {
+  background-color: var(--bg-primary);
+}
+
+/* Contenedor interno: mantiene margen y padding para el contenido */
+.ayudita-container {
+  padding: 2rem;
+  padding-top: 90px;
+  margin: 0 auto;
+  max-width: 1400px;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.ayudita-header {
+  margin-bottom: 3rem;
+}
+
+.page-title {
+  color: var(--text-primary);
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+/* En modo claro, mantener blanco */
+:host-context(body:not(.dark-mode)) .page-title {
+  color: white;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .page-subtitle {
+  color: #9CA3AF;
+}
+
+/* Secciones */
+section {
+  background-color: var(--bg-primary);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) section {
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+  transition: color 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .section-title {
+  color: #1F2041;
+}
+
+.section-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: -1rem 0 1.5rem 0;
+  transition: color 0.3s ease;
+}
+
+/* FAQs */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.faq-item {
+  border: 2px solid var(--border-color);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.3s;
+  background-color: var(--bg-secondary);
+}
+
+:host-context(body:not(.dark-mode)) .faq-item {
+  background-color: transparent;
+  border-color: #E5E7EB;
+}
+
+.faq-item:hover {
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+
+:host-context(body:not(.dark-mode)) .faq-item:hover {
+  border-color: #3B82F6;
+}
+
+.faq-item.expanded {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+:host-context(body:not(.dark-mode)) .faq-item.expanded {
+  border-color: #1F2041;
+  box-shadow: 0 4px 12px rgba(31, 32, 65, 0.15);
+}
+
+.faq-question {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  background-color: transparent;
+}
+
+.faq-question:hover {
+  background-color: var(--bg-tertiary);
+}
+
+:host-context(body:not(.dark-mode)) .faq-question:hover {
+  background-color: #F9FAFB;
+}
+
+.faq-icon {
+  color: var(--primary);
+  font-size: 0.875rem;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .faq-icon {
+  color: #3B82F6;
+}
+
+.faq-text {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .faq-text {
+  color: #1F2937;
+}
+
+.faq-answer {
+  padding: 0 1.5rem 1.25rem 3.5rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  animation: slideDown 0.3s ease-out;
+  transition: color 0.3s ease;
+}
+
+.faq-answer p {
+  margin: 0;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Guías */
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.guide-card {
+  padding: 1.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: 0.75rem;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  background-color: var(--bg-secondary);
+}
+
+:host-context(body:not(.dark-mode)) .guide-card {
+  border-color: #E5E7EB;
+  background-color: transparent;
+}
+
+.guide-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 15px rgba(99, 102, 241, 0.2);
+}
+
+:host-context(body:not(.dark-mode)) .guide-card:hover {
+  border-color: #3B82F6;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.guide-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  filter: grayscale(0);
+  transition: transform 0.3s ease;
+}
+
+.guide-card:hover .guide-icon {
+  transform: scale(1.1);
+}
+
+.guide-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .guide-title {
+  color: #1F2041;
+}
+
+.guide-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+  transition: color 0.3s ease;
+}
+
+/* Formulario */
+.contact-form {
+  max-width: 800px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .form-label {
+  color: #374151;
+}
+
+.form-input,
+.form-textarea {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.3s;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+:host-context(body:not(.dark-mode)) .form-input:focus,
+:host-context(body:not(.dark-mode)) .form-textarea:focus {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+:host-context(body.dark-mode) .form-input:focus,
+:host-context(body.dark-mode) .form-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+
+.form-textarea {
+  resize: vertical;
+  font-family: inherit;
+  min-height: 120px;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+:host-context(body:not(.dark-mode)) .btn-submit {
+  background: linear-gradient(135deg, #1F2041 0%, #3B82F6 100%);
+  box-shadow: 0 4px 12px rgba(31, 32, 65, 0.3);
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(99, 102, 241, 0.4);
+}
+
+:host-context(body:not(.dark-mode)) .btn-submit:hover {
+  box-shadow: 0 8px 15px rgba(31, 32, 65, 0.3);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Estado de éxito */
+.success-message {
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 2px solid var(--success);
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+.success-message svg {
+  flex-shrink: 0;
+}
+
+/* Estado de error */
+.error-message {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 2px solid var(--danger);
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Animación de carga */
+.btn-submit.loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.btn-submit.loading::after {
+  content: '';
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (min-width: 1025px) {
+  .ayudita-container {
+    margin-left: 280px;
+    width: calc(100vw - 280px);
+  }
+}
+
+@media (max-width: 768px) {
+  .ayudita-container {
+    padding: 1.5rem;
+    padding-top: 90px;
+  }
+
+  .ayudita-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .guides-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  .faq-answer {
+    padding: 0 1rem 1rem 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ayudita-container {
+    padding: 1rem;
+    padding-top: 80px;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .section {
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+
+  .faq-question {
+    padding: 1rem;
+  }
+
+  .faq-answer {
+    padding: 0 1rem 1rem 2rem;
+    font-size: 0.875rem;
+  }
+
+  .guide-card {
+    padding: 1.25rem;
+  }
+
+  .guide-icon {
+    font-size: 2.5rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 0.875rem 2rem;
+  }
+}
+
+/* Mejoras de accesibilidad */
+.faq-question:focus-visible,
+.guide-card:focus-visible,
+.form-input:focus-visible,
+.form-textarea:focus-visible,
+.btn-submit:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Transiciones suaves para todos los elementos interactivos */
+.faq-item,
+.guide-card,
+.form-input,
+.form-textarea,
+.btn-submit {
+  will-change: transform;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-secondary) var(--bg-secondary);
+}

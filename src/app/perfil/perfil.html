@@ -1,0 +1,199 @@
+<div class="perfil-container">
+
+  <app-encabezado></app-encabezado>
+
+  <!-- Sección del avatar y datos principales -->
+  <div class="perfil-header">
+    <div class="avatar-section">
+      <div class="avatar-wrapper">
+        <img 
+          [src]="usuario.avatar || 'https://ui-avatars.com/api/?name=' + usuario.nombre + '+' + usuario.apellido + '&size=200&background=1F2041&color=fff'" 
+          alt="Avatar"
+          class="avatar-img">
+        <label for="avatar-input" class="avatar-edit" *ngIf="editMode">
+          <span>📷</span>
+          <input 
+            type="file" 
+            id="avatar-input" 
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            style="display: none;">
+        </label>
+      </div>
+      <div class="usuario-info">
+        <h1 class="nombre-usuario">{{ usuario.nombre }} {{ usuario.apellido }}</h1>
+        <p class="email-usuario">{{ usuario.email }}</p>
+        <p class="carrera-usuario">{{ usuario.carrera }} - Semestre {{ usuario.semestre }}</p>
+      </div>
+    </div>
+
+    <div class="acciones-header">
+      <button class="btn-accion" (click)="activarEdicion()" *ngIf="!editMode">
+        ✏️ Editar Perfil
+      </button>
+      <button class="btn-accion btn-password" (click)="activarCambioPassword()" *ngIf="!editMode && !passwordMode">
+        🔒 Cambiar Contraseña
+      </button>
+    </div>
+  </div>
+
+  <!-- Estadísticas rápidas -->
+  <div class="estadisticas-grid" *ngIf="!editMode && !passwordMode">
+    <div class="stat-box">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <p class="stat-value">{{ estadisticas.tareasCompletadas }}</p>
+        <p class="stat-label">Tareas Completadas</p>
+      </div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <p class="stat-value">{{ estadisticas.promedio }}%</p>
+        <p class="stat-label">Promedio General</p>
+      </div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-icon">📚</div>
+      <div class="stat-content">
+        <p class="stat-value">{{ estadisticas.materiasActivas }}</p>
+        <p class="stat-label">Materias Activas</p>
+      </div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-icon">⏱️</div>
+      <div class="stat-content">
+        <p class="stat-value">{{ estadisticas.horasEstudio }}h</p>
+        <p class="stat-label">Horas de Estudio</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario de edición -->
+  <div class="perfil-content" *ngIf="editMode">
+    <div class="card">
+      <h2 class="card-title">Editar Información Personal</h2>
+      
+      <form class="form-perfil">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-input" [(ngModel)]="usuarioTemp.nombre" name="nombre">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Apellido</label>
+            <input type="text" class="form-input" [(ngModel)]="usuarioTemp.apellido" name="apellido">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" [(ngModel)]="usuarioTemp.email" name="email">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input type="tel" class="form-input" [(ngModel)]="usuarioTemp.telefono" name="telefono">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Dirección</label>
+          <input type="text" class="form-input" [(ngModel)]="usuarioTemp.direccion" name="direccion">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Fecha de Nacimiento</label>
+            <input type="date" class="form-input" [(ngModel)]="usuarioTemp.fechaNacimiento" name="fechaNacimiento">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Semestre</label>
+            <input type="number" class="form-input" [(ngModel)]="usuarioTemp.semestre" name="semestre" min="1" max="10">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Carrera</label>
+          <input type="text" class="form-input" [(ngModel)]="usuarioTemp.carrera" name="carrera">
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancelar" (click)="cancelarEdicion()">
+            Cancelar
+          </button>
+          <button type="button" class="btn-guardar" (click)="guardarCambios()">
+            Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Formulario de cambio de contraseña -->
+  <div class="perfil-content" *ngIf="passwordMode">
+    <div class="card">
+      <h2 class="card-title">Cambiar Contraseña</h2>
+      
+      <form class="form-perfil">
+        <div class="form-group">
+          <label class="form-label">Contraseña Actual</label>
+          <input type="password" class="form-input" [(ngModel)]="passwordData.actual" name="actual" placeholder="Ingresa tu contraseña actual">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nueva Contraseña</label>
+          <input type="password" class="form-input" [(ngModel)]="passwordData.nueva" name="nueva" placeholder="Mínimo 6 caracteres">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirmar Nueva Contraseña</label>
+          <input type="password" class="form-input" [(ngModel)]="passwordData.confirmar" name="confirmar" placeholder="Repite la nueva contraseña">
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancelar" (click)="cancelarCambioPassword()">
+            Cancelar
+          </button>
+          <button type="button" class="btn-guardar" (click)="cambiarPassword()">
+            Cambiar Contraseña
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Vista de información (no editable) -->
+  <div class="perfil-content" *ngIf="!editMode && !passwordMode">
+    <div class="card">
+      <h2 class="card-title">Información Personal</h2>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">📧 Email</span>
+          <span class="info-value">{{ usuario.email }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">📱 Teléfono</span>
+          <span class="info-value">{{ usuario.telefono }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">📍 Dirección</span>
+          <span class="info-value">{{ usuario.direccion }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">🎂 Fecha de Nacimiento</span>
+          <span class="info-value">{{ usuario.fechaNacimiento }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">🎓 Carrera</span>
+          <span class="info-value">{{ usuario.carrera }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">📖 Semestre</span>
+          <span class="info-value">{{ usuario.semestre }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

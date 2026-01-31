@@ -1,0 +1,101 @@
+<div class="buscar-container">
+
+  <app-encabezado></app-encabezado>
+
+  <div class="buscar-header">
+    <h1 class="page-title">🔍 Buscar Tareas</h1>
+    <p class="page-subtitle">Encuentra rápidamente tus tareas y trabajos</p>
+  </div>
+
+  <div class="search-box">
+    <div class="search-input-wrapper">
+      <span class="search-icon">🔎</span>
+      <input
+        type="text"
+        class="search-input"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="aplicarFiltros()"
+        placeholder="Buscar por nombre de tarea o materia..."
+        name="searchTerm">
+      <button 
+        class="clear-btn" 
+        *ngIf="searchTerm"
+        (click)="limpiarBusqueda()">
+        ✕
+      </button>
+    </div>
+
+    <div class="filter-section">
+      <label class="filter-label">Filtrar por estado:</label>
+      <div class="filter-buttons">
+        <button 
+          class="filter-btn"
+          [class.active]="selectedFilter === 'todas'"
+          (click)="selectedFilter = 'todas'; aplicarFiltros()">
+          Todas
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="selectedFilter === 'pendiente'"
+          (click)="selectedFilter = 'pendiente'; aplicarFiltros()">
+          Pendientes
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="selectedFilter === 'completada'"
+          (click)="selectedFilter = 'completada'; aplicarFiltros()">
+          Completadas
+        </button>
+        <button 
+          class="filter-btn"
+          [class.active]="selectedFilter === 'atrasada'"
+          (click)="selectedFilter = 'atrasada'; aplicarFiltros()">
+          Atrasadas
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de Resultados -->
+  <div class="results-count" *ngIf="tareasMostradas.length > 0">
+    Se encontraron <strong>{{ tareasMostradas.length }}</strong> tarea(s)
+  </div>
+
+  <div class="results-grid">
+    <ng-container *ngIf="tareasMostradas.length > 0; else noResultados">
+      <div class="tarea-card" *ngFor="let tarea of tareasMostradas">
+        <div class="tarea-header">
+          <h3 class="tarea-nombre" [style.text-decoration]="tarea.completada ? 'line-through' : 'none'">
+            {{ tarea.titulo }}
+          </h3>
+          <span class="tarea-estado" [ngClass]="getEstadoClass(tarea)">
+            {{ getEstadoLabel(tarea) }}
+          </span>
+        </div>
+        
+        <p class="tarea-materia">
+          <span [style.color]="tarea.materiaColor || 'var(--text-secondary)'">●</span> 
+          {{ tarea.materiaNombre || 'General' }}
+        </p>
+        
+        <p class="tarea-fecha">
+          📅 {{ tarea.fechaEntrega | date:'dd/MM/yyyy' }} - {{ tarea.horaEntrega }}
+        </p>
+        
+        <p class="tarea-fecha" *ngIf="tarea.descripcion" style="margin-top: 0.5rem; font-style: italic;">
+           {{ tarea.descripcion }}
+        </p>
+      </div>
+    </ng-container>
+
+    <ng-template #noResultados>
+      <div class="no-results animated" style="grid-column: 1 / -1;">
+        <h3>No se encontraron resultados</h3>
+        <p>Intenta ajustar los filtros o buscar con otros términos.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <app-footer></app-footer>
+  
+</div>

@@ -1,0 +1,179 @@
+<div class="Background">
+  <app-encabezado></app-encabezado>
+    <div class="container">
+      <header class="header">
+        <h1>Sistema de Accesibilidad para Videos</h1>
+        <p>Funciones de accesibilidad para personas con discapacidades auditivas y visuales</p>
+      </header>
+
+      <div class="controles-panel">
+        <h2>Controles de Accesibilidad</h2>
+        
+        <div class="controles-grid">
+          <div class="control-card">
+            <div class="control-header">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <path d="M7 15h4M13 15h4M7 11h2M13 11h2"></path>
+              </svg>
+              <h3>Subtítulos</h3>
+            </div>
+            <p>Muestra texto sincronizado con el video</p>
+            <button 
+              [class.activo]="subtitulosActivos"
+              (click)="toggleSubtitulos()"
+              class="btn">
+              {{ subtitulosActivos ? 'Desactivar' : 'Activar' }}
+            </button>
+          </div>
+
+          <div class="control-card">
+            <div class="control-header">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"></path>
+              </svg>
+              <h3>Transcripción</h3>
+            </div>
+            <p>Texto completo del contenido del video</p>
+            <button 
+              [class.activo]="transcripcionActiva"
+              (click)="toggleTranscripcion()"
+              class="btn">
+              {{ transcripcionActiva ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+
+          <div class="control-card">
+            <div class="control-header">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18V5l12-2v13M9 9l12-2"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+              </svg>
+              <h3>Control de Audio</h3>
+            </div>
+            <p>Pausar o detener la reproducción</p>
+            <div class="btn-group">
+              <button 
+                (click)="pausarVideo()"
+                [disabled]="videoPausado"
+                class="btn btn-small">
+                Pausar
+              </button>
+              <button 
+                (click)="detenerVideo()"
+                class="btn btn-small">
+                Detener
+              </button>
+              <button 
+                (click)="reproducirVideo()"
+                [disabled]="!videoPausado"
+                class="btn btn-small">
+                Reproducir
+              </button>
+            </div>
+          </div>
+
+          <div class="control-card">
+            <div class="control-header">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <h3>Alertas Visuales</h3>
+            </div>
+            <p>Notificaciones visuales sin sonido</p>
+            <button 
+              [class.activo]="alertasVisualesActivas"
+              (click)="toggleAlertasVisuales()"
+              class="btn">
+              {{ alertasVisualesActivas ? 'Desactivar' : 'Activar' }}
+            </button>
+          </div>
+
+          <div class="control-card">
+            <div class="control-header">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <h3>Intérprete de Señas</h3>
+            </div>
+            <p>Avatar en lengua de señas</p>
+            <button 
+              [class.activo]="interpreteActivo"
+              (click)="toggleInterprete()"
+              class="btn">
+              {{ interpreteActivo ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-area">
+        <div class="video-container">
+          
+          <video 
+            #videoPlayer 
+            controls 
+            width="100%"
+            (play)="onPlay()" 
+            (pause)="onPause()" 
+            (ended)="onEnded()"
+            (timeupdate)="onTimeUpdate()">
+            
+            <source src="IA_VIDEO.mp4" type="video/mp4">
+            Tu navegador no soporta el elemento de video.
+          </video>
+          
+          <div class="video-estado-overlay" *ngIf="videoPausado">
+            <p class="estado-texto">
+              {{ videoPausado ? (videoDetenido ? 'VIDEO DETENIDO' : 'VIDEO PAUSADO') : 'VIDEO REPRODUCIENDO' }}
+            </p>
+          </div>
+          
+          <div class="subtitulos-overlay" *ngIf="subtitulosActivos && subtituloActual">
+            <div class="subtitulo">{{ subtituloActual }}</div>
+          </div>
+          
+          <div class="interprete-overlay" *ngIf="interpreteActivo">
+            <div class="interprete-avatar">
+              <video 
+                #signLanguagePlayer 
+                width="100%" 
+                height="100%" 
+                muted 
+                loop 
+                playsinline 
+                preload="auto"
+                autoplay>
+                <source src="interprete.mp4" type="video/mp4">
+                Tu navegador no soporta el video del intérprete de señas.
+              </video>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+      <div class="transcripcion-panel" *ngIf="transcripcionActiva">
+            <h3>Transcripción Completa</h3>
+        <div class="transcripcion-contenido">
+            <pre>{{ transcripcionCompleta || 'Generando transcripción...' }}</pre>
+        </div>
+      </div>
+
+
+    </div>
+
+
+    <footer>
+    <app-footer></app-footer>
+  </footer>
+</div>
+
+

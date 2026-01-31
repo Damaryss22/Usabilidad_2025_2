@@ -1,0 +1,249 @@
+<div class="tareas-wrapper">
+  <header>
+    <app-encabezado></app-encabezado>
+  </header>
+
+  <div class="main-layout">
+
+    <main class="content">
+      <div class="page-header">
+        <h1>📃 Mis Tareas</h1>
+        <p class="subtitle">Organiza y gestiona tus tareas pendientes</p>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-container">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar tarea..."
+            [(ngModel)]="busqueda"
+            (ngModelChange)="buscarTareas()"
+          />
+        </div>
+
+        <div class="filters">
+          <select [(ngModel)]="filtroEstado" (ngModelChange)="actualizarFiltro()" class="filter-select">
+            <option value="todas">Todas</option>
+            <option value="pendientes">Pendientes</option>
+            <option value="completadas">Completadas</option>
+          </select>
+
+          <select [(ngModel)]="filtroPrioridad" (ngModelChange)="actualizarFiltro()" class="filter-select">
+            <option value="todas">Todas las prioridades</option>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </div>
+
+        <button class="btn-add" (click)="toggleFormulario()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          {{ mostrarFormulario ? 'Cancelar' : 'Nueva Tarea' }}
+        </button>
+      </div>
+
+      <!-- Formulario -->
+      <div class="form-container" *ngIf="mostrarFormulario">
+        <div class="form-header">
+          <h3>{{ editando ? '✏️ Editar Tarea' : '➕ Agregar Nueva Tarea' }}</h3>
+          <button class="btn-close" (click)="toggleFormulario()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <form (submit)="editando ? guardarEdicion() : agregarTarea(); $event.preventDefault()" class="form-grid">
+          <div class="form-group">
+            <label>Título de la Tarea *</label>
+            <input
+              type="text"
+              placeholder="Ej: Resolver ejercicios del capítulo 5"
+              [(ngModel)]="nuevaTarea.titulo"
+              name="titulo"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Materia *</label>
+            <select [(ngModel)]="nuevaTarea.materiaId" name="materiaId" required>
+              <option [value]="0">Seleccione una materia</option>
+              <option *ngFor="let materia of materias" [value]="materia.id">
+                {{ materia.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Fecha de Entrega *</label>
+            <input
+              type="date"
+              [(ngModel)]="nuevaTarea.fechaEntrega"
+              name="fechaEntrega"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Hora de Entrega *</label>
+            <input
+              type="time"
+              [(ngModel)]="nuevaTarea.horaEntrega"
+              name="horaEntrega"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Prioridad *</label>
+            <select [(ngModel)]="nuevaTarea.prioridad" name="prioridad" required>
+              <option value="baja">🟢 Baja</option>
+              <option value="media">🟡 Media</option>
+              <option value="alta">🔴 Alta</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Descripción *</label>
+            <textarea
+              [(ngModel)]="nuevaTarea.descripcion"
+              name="descripcion"
+              placeholder="Describe qué debe hacer para completar esta tarea..."
+              rows="4"
+              required
+            ></textarea>
+          </div>
+
+            <div class="form-group full-width">
+                <label>Archivo Adjunto (Opcional)</label>
+                <div class="file-upload">
+                    <input
+                    type="file"
+                    id="file-input"
+                    (change)="onFileSelected($event)"
+                    accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
+                    style="display: none;"
+                    />
+                    <button type="button" class="btn-upload" (click)="abrirSelectorArchivo()">
+                    📎 Adjuntar archivo
+                    </button>
+                    <span class="file-name" *ngIf="nuevaTarea.nombreArchivo">
+                    {{ nuevaTarea.nombreArchivo }}
+                    <button type="button" class="btn-remove-file" (click)="eliminarArchivo()">✕</button>
+                    </span>
+                </div>
+                <small>Formatos permitidos: PDF, DOC, DOCX, TXT, JPG, PNG (máx. 5MB)</small>
+            </div>
+
+          <div class="form-actions full-width">
+            <button type="button" class="btn-secondary" (click)="limpiarFormulario()">
+              🗑️ Limpiar
+            </button>
+            <button type="submit" class="btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              {{ editando ? 'Actualizar Tarea' : 'Guardar Tarea' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Lista de Tareas -->
+      <div class="tareas-list" *ngIf="tareasFiltradas.length > 0; else sinTareas">
+        <div 
+          class="tarea-card" 
+          *ngFor="let tarea of tareasFiltradas"
+          [class.completada]="tarea.completada"
+          [class.selected]="tareaSeleccionada?.id === tarea.id"
+          (click)="seleccionarTarea(tarea)"
+        >
+          <div class="tarea-header">
+            <div class="tarea-check">
+              <input 
+                type="checkbox" 
+                [checked]="tarea.completada"
+                (change)="toggleCompletada(tarea); $event.stopPropagation()"
+              />
+            </div>
+            <div class="tarea-info">
+              <h3 [class.tachado]="tarea.completada">{{ tarea.titulo }}</h3>
+              <div class="tarea-meta">
+                <span class="materia-tag" [style.background-color]="tarea.materiaColor">
+                  {{ tarea.materiaNombre }}
+                </span>
+                <span class="prioridad-badge" [ngClass]="getPrioridadClass(tarea.prioridad)">
+                  {{ getPrioridadLabel(tarea.prioridad) }}
+                </span>
+              </div>
+            </div>
+            <div class="tarea-actions">
+              <button class="btn-icon btn-edit" (click)="editarTarea(tarea); $event.stopPropagation()" title="Editar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="btn-icon btn-delete" (click)="eliminarTarea(tarea.id); $event.stopPropagation()" title="Eliminar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="tarea-details">
+            <div class="detail-row">
+              <span class="icon">📅</span>
+              <span>{{ tarea.fechaEntrega | date: 'dd/MM/yyyy' }} - {{ tarea.horaEntrega }}</span>
+              <span class="dias-restantes" [class.urgente]="getDiasRestantes(tarea.fechaEntrega) <= 2">
+                {{ getDiasRestantes(tarea.fechaEntrega) > 0 ? 
+                   'Faltan ' + getDiasRestantes(tarea.fechaEntrega) + ' días' : 
+                   getDiasRestantes(tarea.fechaEntrega) === 0 ? '¡Hoy!' : '¡Vencida!' }}
+              </span>
+            </div>
+            
+            <div class="detail-row" *ngIf="tarea.nombreArchivo">
+              <span class="icon">📎</span>
+              <button class="archivo-link" (click)="descargarArchivo(tarea); $event.stopPropagation()">
+                {{ tarea.nombreArchivo }}
+              </button>
+            </div>
+          </div>
+
+          <div class="tarea-descripcion" *ngIf="tareaSeleccionada?.id === tarea.id">
+            <p>{{ tarea.descripcion }}</p>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #sinTareas>
+        <div class="empty-state">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          <h3>No hay tareas {{ filtroEstado !== 'todas' ? filtroEstado : 'registradas' }}</h3>
+          <p>Comienza agregando tu primera tarea usando el botón "Nueva Tarea"</p>
+        </div>
+      </ng-template>
+    </main>
+  </div>
+
+  <app-footer></app-footer>
+</div>

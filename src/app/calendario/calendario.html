@@ -1,0 +1,191 @@
+<!-- CALENDARIO.HTML -->
+<div class="calendario-wrapper">
+  <header>
+    <app-encabezado></app-encabezado>
+  </header>
+
+  <div class="main-layout">
+    <aside class="sidebar">
+      <app-menu [userType]="'estudiante'"></app-menu>
+    </aside>
+
+    <main class="content">
+      <div class="page-header">
+        <h1>📅 Calendario de Tareas</h1>
+        <p class="subtitle">Visualiza tus entregas pendientes</p>
+      </div>
+
+      <!-- Controles de Vista -->
+      <div class="vista-controls">
+        <button 
+          class="vista-btn"
+          [class.active]="vistaActual === 'mes'"
+          (click)="cambiarVista('mes')"
+        >
+          📅 Vista Mensual
+        </button>
+        <button 
+          class="vista-btn"
+          [class.active]="vistaActual === 'lista'"
+          (click)="cambiarVista('lista')"
+        >
+          📋 Vista Lista
+        </button>
+        <button class="btn-nueva-tarea" (click)="irATareas()">
+          ➕ Nueva Tarea
+        </button>
+      </div>
+
+      <!-- VISTA MENSUAL -->
+      <div class="calendario-container" *ngIf="vistaActual === 'mes'">
+        <!-- Controles del Calendario -->
+        <div class="calendario-header">
+          <button class="btn-nav" (click)="mesAnterior()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          
+          <h2>{{ meses[mesActual] }} {{ anioActual }}</h2>
+          
+          <button class="btn-nav" (click)="mesSiguiente()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+          
+          <button class="btn-hoy" (click)="mesActualHoy()">Hoy</button>
+        </div>
+
+        <!-- Días de la semana -->
+        <div class="calendario-dias-semana">
+          <div class="dia-semana" *ngFor="let dia of diasSemana">{{ dia }}</div>
+        </div>
+
+        <!-- Grid del Calendario -->
+        <div class="calendario-grid">
+        <div 
+            class="dia-celda"
+            *ngFor="let dia of diasCalendario"
+            [class.otro-mes]="!dia.mesActual"
+            [class.hoy]="esHoy(dia.fecha)"
+            [class.con-tareas]="dia.tareas.length > 0"
+            [class.seleccionado]="diaSeleccionado?.fecha?.getTime() === dia.fecha.getTime()"
+            (click)="seleccionarDia(dia)"
+        >
+            <div class="dia-numero">{{ dia.dia }}</div>
+            <div class="dia-tareas" *ngIf="dia.tareas.length > 0">
+            <div 
+                class="tarea-punto"
+                *ngFor="let tarea of dia.tareas.slice(0, 3)"
+                [style.background-color]="tarea.materiaColor"
+                [title]="tarea.titulo"
+            ></div>
+            <span class="mas-tareas" *ngIf="dia.tareas.length > 3">
+                +{{ dia.tareas.length - 3 }}
+            </span>
+            </div>
+        </div>
+        </div>
+
+        <!-- Panel de Detalle del Día Seleccionado -->
+        <div class="detalle-dia" *ngIf="diaSeleccionado">
+          <div class="detalle-header">
+            <h3>📅 {{ diaSeleccionado.fecha | date: 'EEEE, d MMMM yyyy' }}</h3>
+            <button class="btn-close-detalle" (click)="diaSeleccionado = null">✕</button>
+          </div>
+          
+          <div class="detalle-tareas" *ngIf="diaSeleccionado.tareas.length > 0; else sinTareasDetalle">
+            <div class="tarea-item" *ngFor="let tarea of diaSeleccionado.tareas">
+              <input 
+                type="checkbox" 
+                [checked]="tarea.completada"
+                (change)="toggleCompletada(tarea)"
+              />
+              <div class="tarea-info">
+                <h4 [class.tachado]="tarea.completada">{{ tarea.titulo }}</h4>
+                <div class="tarea-meta">
+                  <span class="materia-tag" [style.background-color]="tarea.materiaColor">
+                    {{ tarea.materiaNombre }}
+                  </span>
+                  <span [ngClass]="getPrioridadClass(tarea.prioridad)">
+                    {{ getPrioridadLabel(tarea.prioridad) }}
+                  </span>
+                  <span class="hora">🕐 {{ tarea.horaEntrega }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #sinTareasDetalle>
+            <p class="sin-tareas-dia">No hay tareas para este día</p>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- VISTA LISTA -->
+      <div class="lista-container" *ngIf="vistaActual === 'lista'">
+        <div class="lista-header">
+          <h3>📋 Próximas Entregas</h3>
+        </div>
+
+        <div class="tareas-proximas" *ngIf="obtenerTareasProximas().length > 0; else sinTareasProximas">
+          <div 
+            class="tarea-lista-item"
+            *ngFor="let tarea of obtenerTareasProximas()"
+            [class.urgente]="getDiasRestantes(tarea.fechaEntrega) <= 2"
+          >
+            <div class="tarea-fecha-col">
+              <div class="fecha-box">
+                <span class="fecha-dia">{{ tarea.fechaEntrega | date: 'd' }}</span>
+                <span class="fecha-mes">{{ tarea.fechaEntrega | date: 'MMM' }}</span>
+              </div>
+              <span class="dias-restantes">
+                {{ getDiasRestantes(tarea.fechaEntrega) === 0 ? '¡Hoy!' : 
+                   getDiasRestantes(tarea.fechaEntrega) === 1 ? 'Mañana' :
+                   getDiasRestantes(tarea.fechaEntrega) + ' días' }}
+              </span>
+            </div>
+
+            <div class="tarea-info-col">
+              <div class="tarea-checkbox">
+                <input 
+                  type="checkbox" 
+                  [checked]="tarea.completada"
+                  (change)="toggleCompletada(tarea)"
+                />
+              </div>
+              <div class="tarea-detalles">
+                <h4 [class.tachado]="tarea.completada">{{ tarea.titulo }}</h4>
+                <p class="tarea-descripcion">{{ tarea.descripcion }}</p>
+                <div class="tarea-meta-lista">
+                  <span class="materia-tag" [style.background-color]="tarea.materiaColor">
+                    {{ tarea.materiaNombre }}
+                  </span>
+                  <span [ngClass]="getPrioridadClass(tarea.prioridad)">
+                    {{ getPrioridadLabel(tarea.prioridad) }}
+                  </span>
+                  <span class="hora">🕐 {{ tarea.horaEntrega }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #sinTareasProximas>
+          <div class="empty-state-lista">
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <h3>¡Todo al día!</h3>
+            <p>No tienes tareas pendientes próximas</p>
+          </div>
+        </ng-template>
+      </div>
+
+    </main>
+  </div>
+
+  <app-footer></app-footer>
+</div>

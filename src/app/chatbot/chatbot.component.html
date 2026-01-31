@@ -1,0 +1,59 @@
+<div class="chatbot-container">
+  <!-- Botón flotante para abrir/cerrar -->
+  <button class="chat-toggle-btn" (click)="toggleChat()" [class.active]="isOpen">
+    <span *ngIf="!isOpen">💬 Ayuda</span>
+    <span *ngIf="isOpen">✖</span>
+  </button>
+
+  <!-- Ventana del chat -->
+  <div class="chat-window" *ngIf="isOpen">
+    <div class="chat-header">
+      <h3>Asistente Virtual</h3>
+      <span class="status-dot"></span>
+    </div>
+
+    <div class="chat-messages" #scrollContainer>
+      <div *ngFor="let msg of messages" 
+           class="message" 
+           [ngClass]="{'user-message': msg.isUser, 'bot-message': !msg.isUser}">
+        <div class="message-content">
+          <div [innerHTML]="formatMessage(msg.text)"></div>
+          
+          <!-- Recursos adicionales si existen -->
+          <div *ngIf="msg.resources && msg.resources.length > 0" class="resources-list">
+            <small><strong>Recursos recomendados:</strong></small>
+            <ul>
+              <li *ngFor="let res of msg.resources">
+                <a [href]="res.url" target="_blank" rel="noopener noreferrer">
+                  <span *ngIf="res.type === 'video'">🎥</span>
+                  <span *ngIf="res.type === 'article'">📄</span>
+                  <span *ngIf="res.type === 'document'">📚</span>
+                  {{ res.title }}
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <span class="timestamp">{{ msg.timestamp | date:'shortTime' }}</span>
+        </div>
+      </div>
+      
+      <div *ngIf="isLoading" class="message bot-message loading">
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" 
+             [(ngModel)]="userInput" 
+             (keyup.enter)="sendMessage()"
+             placeholder="Escribe tu pregunta aquí..."
+             [disabled]="isLoading">
+      <button (click)="sendMessage()" [disabled]="!userInput.trim() || isLoading">
+        ➤
+      </button>
+    </div>
+  </div>
+</div>

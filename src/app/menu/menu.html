@@ -1,0 +1,19 @@
+<aside class="menu-lateral" [class.hidden]="!isOpen">
+  <nav class="menu-nav">
+    <app-menu-item
+      *ngFor="let item of menuItems"
+      [item]="item"
+      (click)="onMenuItemClick(item)">
+    </app-menu-item>
+  </nav>
+
+  <div class="menu-footer">
+    <div class="user-info">
+      <div class="user-avatar">👤</div>
+      <div class="user-details">
+        <p class="user-name">Usuario</p>
+        <p class="user-role">Estudiante</p>
+      </div>
+    </div>
+  </div>
+</aside>

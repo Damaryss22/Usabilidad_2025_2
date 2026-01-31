@@ -1,0 +1,252 @@
+/* ============================================================
+   🎨 ENCABEZADO CON MODO CLARO / OSCURO (sin :root)
+   ============================================================ */
+
+/* ===== 🎨 MODO CLARO (por defecto) ===== */
+:host-context(body:not(.dark-mode)) {
+  --header-bg: #ffffff;
+  --header-text: #1f2041;
+  --btn-color: #1f2041;
+  --btn-hover: #2c2d5a;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --border-color: #d1d5db;
+}
+
+/* ===== 🌙 MODO OSCURO ===== */
+:host-context(body.dark-mode) {
+  --header-bg: #1e293b;
+  --header-text: #f1f5f9;
+  --btn-color: #6366f1;
+  --btn-hover: #4f46e5;
+  --danger: #ef4444;
+  --danger-hover: #b91c1c;
+  --border-color: #475569;
+}
+
+/* ===== ENCABEZADO PRINCIPAL ===== */
+.encabezado {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ===== LOGO Y TÍTULO ===== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo img {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--header-text);
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* ===== CONTENEDOR DE ACCIONES ===== */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 5rem;
+}
+
+/* ===== CONTENEDOR DEL MENÚ LATERAL ===== */
+.nav-menu-container {
+  position: relative;
+}
+
+/* ===== BOTONES DE NAVEGACIÓN ===== */
+.nav-btn {
+  background-color: var(--btn-color) !important;
+  color: #fff !important;
+  border: none;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.nav-btn:hover {
+  background-color: var(--btn-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(31, 32, 65, 0.2);
+}
+
+.nav-btn:active {
+  transform: translateY(0);
+}
+
+.nav-btn i {
+  font-size: 1.1rem;
+}
+
+/* ===== BOTÓN DE CERRAR SESIÓN ===== */
+.nav-btn.logout {
+  background-color: var(--danger) !important;
+}
+
+.nav-btn.logout:hover {
+  background-color: var(--danger-hover) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+/* ===== SELECT DE IDIOMA ===== */
+.nav-select {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 2px solid var(--border-color);
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.nav-select:hover {
+  border-color: var(--btn-color);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.nav-select:focus {
+  outline: none;
+  border-color: var(--btn-color);
+  box-shadow: 0 0 0 3px rgba(31, 32, 65, 0.1);
+}
+
+.nav-select option {
+  padding: 8px;
+}
+
+/* ===== MENÚ LATERAL ===== */
+.menu-lateral {
+  position: absolute;
+  top: 0;
+  min-width: 220px;
+  background-color: var(--header-bg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  z-index: 1001;
+  overflow: hidden;
+  animation: slideInLeft 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+/* ===== ANIMACIÓN ===== */
+.menu {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(10px);
+  transition: all 0.3s ease;
+}
+
+.menu.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .encabezado {
+    padding: 0 1.5rem;
+  }
+  .header-actions {
+    gap: 10px;
+  }
+  .nav-btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+  .nav-select {
+    min-width: 110px;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .encabezado {
+    padding: 0 1rem;
+    height: 65px;
+  }
+  .logo h1 {
+    font-size: 1.2rem;
+  }
+  .logo img {
+    height: 38px;
+  }
+  .header-actions {
+    gap: 8px;
+  }
+  .nav-btn {
+    padding: 7px 12px;
+    font-size: 0.85rem;
+  }
+  .nav-btn span {
+    display: none;
+  }
+  .nav-select {
+    min-width: 90px;
+    padding: 7px 10px;
+    font-size: 0.85rem;
+  }
+  .menu-lateral {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo h1 {
+    font-size: 1rem;
+  }
+  .logo img {
+    height: 32px;
+  }
+  .nav-btn {
+    padding: 6px 10px;
+  }
+  .nav-select {
+    min-width: 80px;
+    font-size: 0.8rem;
+  }
+}

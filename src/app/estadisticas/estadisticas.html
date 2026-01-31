@@ -1,0 +1,22 @@
+<div class="stat-card" [style.border-left-color]="color">
+  <div class="stat-content">
+    <div class="stat-info">
+      <p class="stat-title">{{ title }}</p>
+      <p class="stat-value">{{ value }}</p>
+    </div>
+    <div class="stat-icon" [style.background-color]="color + '20'">
+      <svg 
+        width="24" 
+        height="24" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        [style.color]="color">
+        <path [attr.d]="getIconPath()"></path>
+      </svg>
+    </div>
+  </div>
+</div>

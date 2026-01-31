@@ -1,0 +1,64 @@
+.stat-card {
+  background-color: var(--bg-primary);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border-left: 4px solid;
+  transition: all 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .stat-card {
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+:host-context(body:not(.dark-mode)) .stat-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-title {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+  transition: all 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .stat-title {
+  color: #6b7280;
+}
+
+.stat-value {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .stat-value {
+  color: #1f2937;
+}
+
+.stat-icon {
+  padding: 0.75rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

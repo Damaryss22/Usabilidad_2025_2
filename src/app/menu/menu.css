@@ -1,0 +1,333 @@
+/* ================================================
+   📱 MENU LATERAL COMPONENT - Con soporte para modo oscuro
+   ================================================ */
+
+.menu-lateral {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 260px;
+  height: calc(100vh - 70px);
+  background-color: var(--bg-primary);
+  border-right: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  transform: translateX(-100%);
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+:host-context(body:not(.dark-mode)) .menu-lateral {
+  background-color: #ffffff;
+  border-right-color: #E5E7EB;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ✅ Cuando Angular pone [class.hidden]="!isOpen" → se quita hidden al abrir */
+.menu-lateral:not(.hidden) {
+  transform: translateX(0);
+}
+
+/* ===== CONTENIDO ===== */
+.menu-nav {
+  flex: 1;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+
+/* Scroll personalizado */
+.menu-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.menu-nav::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.menu-nav::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .menu-nav::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
+.menu-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+:host-context(body:not(.dark-mode)) .menu-nav::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Firefox scrollbar */
+.menu-nav {
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-secondary) var(--bg-secondary);
+}
+
+/* ===== PIE DEL MENÚ ===== */
+.menu-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  transition: all 0.3s ease;
+}
+
+:host-context(body:not(.dark-mode)) .menu-footer {
+  border-top-color: #E5E7EB;
+  background-color: #F9FAFB;
+}
+
+/* ===== INFO DE USUARIO ===== */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.user-info:hover {
+  background-color: var(--bg-tertiary);
+}
+
+:host-context(body:not(.dark-mode)) .user-info:hover {
+  background-color: #F3F4F6;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #fff;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+:host-context(body:not(.dark-mode)) .user-avatar {
+  background: linear-gradient(135deg, #1F2041 0%, #3B82F6 100%);
+}
+
+.user-details {
+  flex: 1;
+  min-width: 0; /* Para que funcione text-overflow */
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host-context(body:not(.dark-mode)) .user-name {
+  color: #1F2937;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host-context(body:not(.dark-mode)) .user-role {
+  color: #6B7280;
+}
+
+/* ===== ITEMS DEL MENÚ (si los tienes) ===== */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+.menu-item:hover {
+  background-color: var(--bg-tertiary);
+  border-left-color: var(--primary);
+}
+
+.menu-item.active {
+  background-color: var(--bg-secondary);
+  border-left-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.menu-item-icon {
+  font-size: 1.25rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.menu-item-text {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+/* ===== ANIMACIONES ===== */
+.menu-lateral {
+  animation: slideInFromLeft 0.3s ease-out;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ===== OVERLAY (si lo usas) ===== */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+:host-context(body.dark-mode) .menu-overlay.active {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .menu-lateral {
+    width: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-lateral {
+    top: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    width: 280px;
+    max-width: 80vw;
+  }
+
+  .menu-lateral:not(.hidden) {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+
+  :host-context(body:not(.dark-mode)) .menu-lateral:not(.hidden) {
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-lateral {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+
+  .user-name {
+    font-size: 0.8125rem;
+  }
+
+  .user-role {
+    font-size: 0.6875rem;
+  }
+
+  .menu-footer {
+    padding: 0.75rem;
+  }
+}
+
+/* ===== ACCESIBILIDAD ===== */
+.menu-item:focus-visible,
+.user-info:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+/* ===== ESTADOS ADICIONALES ===== */
+.menu-lateral.collapsing {
+  transition: transform 0.2s ease-out;
+}
+
+/* Efecto de brillo al abrir */
+.menu-lateral:not(.hidden)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+  animation: shine 1.5s ease-out;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+:host-context(body:not(.dark-mode)) .menu-lateral:not(.hidden)::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+}

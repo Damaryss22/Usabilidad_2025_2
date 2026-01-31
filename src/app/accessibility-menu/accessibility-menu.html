@@ -1,0 +1,142 @@
+<div class="accessibility-container">
+  <button 
+    class="access-toggle-btn" 
+    [class.open]="settings.isMenuOpen"
+    (click)="toggleMenu()">
+    ♿
+  </button>
+
+  <div class="access-panel" *ngIf="settings.isMenuOpen">
+    <h2>Ajustes de Accesibilidad</h2>
+
+    <!-- Alto Contraste -->
+    <div class="setting-group">
+      <h3>Alto Contraste / Modo Oscuro</h3>
+      <button 
+        [class.active]="settings.isHighContrast"
+        (click)="toggleHighContrast()"
+        class="access-btn">
+        {{ settings.isHighContrast ? 'Desactivar Contraste' : 'Activar Contraste' }}
+      </button>
+    </div>
+
+    <!-- Tamaño de texto -->
+    <div class="setting-group">
+      <h3>Tamaño de Texto ({{ settings.fontSize }}%)</h3>
+      <div class="btn-group">
+        <button (click)="decreaseFontSize()" class="access-btn">- Reducir</button>
+        <button (click)="increaseFontSize()" class="access-btn">+ Aumentar</button>
+      </div>
+    </div>
+
+    <!-- Tipo de Fuente -->
+    <div class="setting-group">
+      <h3>Tipo de Fuente</h3>
+      <select 
+        [ngModel]="settings.fontType" 
+        (ngModelChange)="onFontTypeChange($event)" 
+        class="access-select">
+        <option *ngFor="let opt of fontOptions" [value]="opt.value">{{ opt.name }}</option>
+      </select>
+    </div>
+
+    <!-- Color Personalizado -->
+    <div class="setting-group">
+      <h3>Color Personalizado (Foco/Enlaces)</h3>
+      <div class="color-options-group">
+        <button 
+          *ngFor="let color of colorOptions" 
+          [style.background-color]="color"
+          [class.selected]="settings.customColor === color"
+          (click)="onColorChange(color)"
+          class="color-swatch"></button>
+        <input type="color" [ngModel]="settings.customColor" (ngModelChange)="onColorChange($event)" title="Selector de color">
+      </div>
+    </div>
+
+    <!-- Lectura por voz -->
+    <div class="setting-group">
+      <h3>Lectura por Voz (Narrador)</h3>
+      <button 
+        [class.active]="settings.isSpeechActive" 
+        (click)="toggleSpeech()"
+        class="access-btn">
+        {{ settings.isSpeechActive ? 'Detener Narrador' : 'Activar Narrador' }}
+      </button>
+      <p class="speech-info" *ngIf="settings.isSpeechActive">
+        Haz clic en cualquier elemento o selecciona texto para que se lea.
+      </p>
+    </div>
+
+    <!-- Espaciado de Letras -->
+    <div class="setting-group">
+      <h3>Espaciado de Letras ({{ settings.letterSpacing }}px)</h3>
+      <div class="btn-group">
+        <button (click)="accessService.changeSpacing('letter', -1)" class="access-btn">- Reducir</button>
+        <button (click)="accessService.changeSpacing('letter', 1)" class="access-btn">+ Aumentar</button>
+      </div>
+    </div>
+
+    <!-- Espaciado de Líneas -->
+    <div class="setting-group">
+      <h3>Espaciado de Líneas (x{{ settings.lineHeight.toFixed(1) }})</h3>
+      <div class="btn-group">
+        <button (click)="accessService.changeSpacing('line', -0.1)" class="access-btn">- Reducir</button>
+        <button (click)="accessService.changeSpacing('line', 0.1)" class="access-btn">+ Aumentar</button>
+      </div>
+    </div>
+
+    <!-- Navegación por teclado -->
+    <div class="setting-group">
+      <h3>Navegación por Teclado (Tab/Enter)</h3>
+      <button 
+        [class.active]="settings.isKeyboardNavActive" 
+        (click)="toggleKeyboardNav()"
+        class="access-btn">
+        {{ settings.isKeyboardNavActive ? 'Desactivar Navegación' : 'Activar Navegación' }}
+      </button>
+    </div>
+
+    <!-- Botones grandes -->
+    <div class="setting-group">
+      <h3>Botones Grandes (Aumentar)</h3>
+      <button 
+        [class.active]="settings.isLargeButtonsActive" 
+        (click)="toggleLargeButtons()"
+        class="access-btn">
+        {{ settings.isLargeButtonsActive ? 'Desactivar Grandes' : 'Activar Grandes' }}
+      </button>
+    </div>
+
+    <!-- Control por voz -->
+    <div class="setting-group">
+      <h3>Control por Voz / Dictado</h3>
+      <button 
+        [class.active]="settings.isVoiceControlActive" 
+        (click)="toggleVoiceControl()"
+        class="access-btn">
+        {{ settings.isVoiceControlActive ? 'Desactivar Dictado' : 'Activar Dictado' }}
+      </button>
+      <p class="speech-info" *ngIf="settings.isVoiceControlActive">
+        Escuchando comandos de voz...
+      </p>
+    </div>
+
+    <!-- Bloqueo de Auto-Scroll -->
+    <div class="setting-group">
+      <h3>Bloqueo de Auto-Scroll/Play</h3>
+      <button 
+        [class.active]="settings.isAutoScrollBlocked" 
+        (click)="toggleAutoScrollBlock()"
+        class="access-btn">
+        {{ settings.isAutoScrollBlocked ? 'Desbloquear Contenido' : 'Bloquear Auto-Scroll/Play' }}
+      </button>
+    </div>
+
+    <!-- Atajos -->
+    <div class="setting-group">
+      <h3>Atajos de Teclado (Ejemplos)</h3>
+      <p class="speech-info">Contraste: Alt + C | Tamaño +: Alt + +</p>
+    </div>
+  </div>
+</div>

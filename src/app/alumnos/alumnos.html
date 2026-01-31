@@ -1,0 +1,94 @@
+<div class="dashboard-container">
+
+  <header>
+    <app-encabezado></app-encabezado>
+    
+  </header>
+
+  <app-menu></app-menu>
+
+  <!-- Estadísticas -->
+  <div class="stats-grid">
+    <app-stat-card
+      icon="trending-up"
+      title="Promedio General"
+      [value]="stats.promedio + '%'"
+      color="#10B981">
+    </app-stat-card>
+
+    <app-stat-card
+      icon="check-circle"
+      title="Tareas Completadas"
+      [value]="stats.tareasCompletadas.toString()"
+      color="#3B82F6">
+    </app-stat-card>
+
+    <app-stat-card
+      icon="clock"
+      title="Tareas Pendientes"
+      [value]="stats.tareasPendientes.toString()"
+      color="#F59E0B">
+    </app-stat-card>
+
+    <app-stat-card
+      icon="alert-circle"
+      title="Tareas Atrasadas"
+      [value]="stats.tareasAtrasadas.toString()"
+      color="#EF4444">
+    </app-stat-card>
+  </div>
+
+  <!-- Sección de tareas que necesitan ayuda -->
+  <div class="section" *ngIf="tasks.length > 0">
+    <div class="section-header">
+      <h2 class="section-title">📚 Tareas que Necesitan Atención</h2>
+      <p class="section-subtitle">Basado en tus calificaciones, estas tareas podrían beneficiarse de ayuda adicional</p>
+    </div>
+    
+    <div class="tasks-grid">
+      <app-task-card
+        *ngFor="let task of tasks | slice:0:2"
+        [task]="task"
+        (requestHelp)="openHelpModal($event)">
+      </app-task-card>
+    </div>
+  </div>
+
+  <!-- Todas las tareas -->
+  <div class="section" *ngIf="tasks.length > 0">
+    <div class="section-header">
+      <h2 class="section-title">📝 Todas las Tareas</h2>
+      <p class="section-subtitle">Organizadas por prioridad</p>
+    </div>
+    
+    <div class="tasks-grid">
+      <app-task-card
+        *ngFor="let task of tasks"
+        [task]="task"
+        (requestHelp)="openHelpModal($event)">
+      </app-task-card>
+    </div>
+  </div>
+
+  <!-- Estado vacío (Empty State) -->
+  <div class="empty-state-container" *ngIf="tasks.length === 0">
+    <div class="empty-content">
+      <div class="empty-icon">📂</div>
+      <h3>No tienes tareas registradas</h3>
+      <p>Parece que estás al día. ¡Crea una nueva tarea para comenzar!</p>
+      <button class="btn-create" (click)="irATareas()">
+        Agendar Tarea
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de ayuda -->
+  <app-help-modal
+    *ngIf="showHelpModal && selectedTask"
+    [task]="selectedTask"
+    (close)="closeHelpModal()"
+    (submit)="submitHelpRequest($event)">
+  </app-help-modal>
+
+  <app-footer></app-footer>
+</div>

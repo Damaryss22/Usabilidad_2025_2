@@ -1,0 +1,558 @@
+/* ================================================
+   📝 TAREAS COMPONENT STYLES - Con soporte para modo oscuro
+   ================================================ */
+
+/* --- Layout Principal --- */
+.tareas-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  transition: background-color 0.3s ease;
+  padding-top: 70px; /* Espacio para el header fijo */
+}
+
+/* Modo claro: gradiente sutil si se desea, o mantener bg-secondary */
+:host-context(body:not(.dark-mode)) .tareas-wrapper {
+  background-color: #f3f4f6;
+}
+
+.main-layout {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Page Header --- */
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.page-header .subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* --- Toolbar (Búsqueda y Filtros) --- */
+.toolbar {
+  background: var(--bg-primary);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.search-container {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-select {
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.btn-add {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.btn-add:hover {
+  background-color: var(--primary-dark, #4f46e5); /* Fallback si no existe primary-dark */
+}
+
+.btn-add svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* --- Formulario --- */
+.form-container {
+  background: var(--bg-primary);
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.form-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.btn-close:hover {
+  background-color: var(--bg-secondary);
+  color: #ef4444;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+/* File Upload Styles */
+.file-upload {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-upload {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.btn-upload:hover {
+  background-color: var(--bg-tertiary, #e5e7eb);
+}
+
+.file-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(99, 102, 241, 0.1); /* indigo-500 con opacidad */
+  color: var(--primary);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.btn-remove-file {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-secondary {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-secondary);
+}
+
+.btn-primary {
+  background: var(--primary);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark, #4f46e5);
+}
+
+/* --- Lista de Tareas --- */
+.tareas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tarea-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.tarea-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  border-color: var(--primary-light, #c7d2fe);
+}
+
+.tarea-card.selected {
+  border-color: var(--primary);
+  background-color: rgba(99, 102, 241, 0.05); /* Tintado muy suave */
+}
+
+/* En modo oscuro, mejor no aclarar el fondo, sino usar bg-secondary */
+:host-context(body.dark-mode) .tarea-card.selected {
+    background-color: var(--bg-secondary);
+}
+
+.tarea-card.completada {
+  opacity: 0.7;
+  background-color: var(--bg-secondary);
+}
+
+.tarea-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.tarea-check input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #10b981;
+}
+
+.tarea-info {
+  flex: 1;
+}
+
+.tarea-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.tarea-info h3.tachado {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.tarea-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.materia-tag {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: white;
+  font-weight: 600;
+  display: inline-block;
+  background-color: var(--primary); /* Fallback */
+}
+
+.prioridad-badge {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Badges con colores semánticos - asegurar legibilidad */
+.prioridad-badge.alta {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.prioridad-badge.media {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.prioridad-badge.baja {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+:host-context(body.dark-mode) .prioridad-badge.alta {
+  background-color: rgba(185, 28, 28, 0.2);
+  color: #fecaca;
+}
+
+:host-context(body.dark-mode) .prioridad-badge.media {
+  background-color: rgba(180, 83, 9, 0.2);
+  color: #fde68a;
+}
+
+:host-context(body.dark-mode) .prioridad-badge.baja {
+  background-color: rgba(4, 120, 87, 0.2);
+  color: #a7f3d0;
+}
+
+.tarea-actions {
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.tarea-card:hover .tarea-actions {
+  opacity: 1;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: var(--text-secondary);
+}
+
+.btn-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-edit:hover { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.btn-delete:hover { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+.tarea-details {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dias-restantes {
+  margin-left: 0.5rem;
+  font-weight: 600;
+  color: #059669;
+}
+
+:host-context(body.dark-mode) .dias-restantes {
+  color: #34d399;
+}
+
+.dias-restantes.urgente {
+  color: #dc2626;
+  animation: pulse 2s infinite;
+}
+
+:host-context(body.dark-mode) .dias-restantes.urgente {
+  color: #f87171;
+}
+
+.archivo-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+}
+
+.tarea-descripcion {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: var(--bg-primary);
+  border-radius: 8px;
+  border: 1px dashed var(--border-color);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* --- Empty State --- */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+  stroke: var(--border-color);
+}
+
+.empty-state h3 {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Responsivo --- */
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+  }
+  
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tarea-header {
+    flex-wrap: wrap;
+  }
+
+  .tarea-actions {
+    width: 100%;
+    justify-content: flex-end;
+    opacity: 1; /* Siempre visible en móvil */
+  }
+  
+  .tarea-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

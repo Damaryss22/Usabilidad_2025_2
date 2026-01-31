@@ -1,0 +1,387 @@
+<!-- Sistema de Notificaciones -->
+<div class="notifications-container" role="alert" aria-live="polite">
+  <div *ngFor="let notification of notifications" 
+       class="notification notification-{{notification.type}}"
+       [attr.aria-label]="notification.message">
+    <div class="notification-content">
+      <i class="notification-icon" 
+         [ngClass]="{
+           'bi bi-check-circle-fill': notification.type === 'success',
+           'bi bi-exclamation-triangle-fill': notification.type === 'warning',
+           'bi bi-x-circle-fill': notification.type === 'error',
+           'bi bi-info-circle-fill': notification.type === 'info'
+         }"></i>
+      <span class="notification-message">{{ notification.message }}</span>
+    </div>
+    <button class="notification-close" 
+            (click)="cerrarNotificacion(notification.id)"
+            aria-label="Cerrar notificación">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+</div>
+
+<main class="auth-container" role="main">
+
+  <div class="auth-box" role="form" aria-labelledby="login-title">
+    <div class="auth-logo">
+      <img src="/logo.png" alt="Logo del sistema organizador de tareas" />
+    </div>
+
+    <div class="text-center mb-4">
+      <h1 id="login-title">Organiza tus Tareas</h1>
+      <h2>Adapta tus Tareas a tu Tiempo</h2>
+    </div>
+
+    <!-- Mensaje de bloqueo temporal -->
+    <div *ngIf="bloqueado" class="alert alert-danger" role="alert">
+      <i class="bi bi-lock-fill"></i>
+      <strong>Cuenta bloqueada temporalmente</strong>
+      <p>Demasiados intentos fallidos. Espera {{ tiempoRestante }} segundos.</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()" novalidate>
+      <!-- Campo Usuario -->
+      <div class="form-group">
+        <label for="usuario" class="form-label">
+          Usuario o Email
+          <button type="button" 
+                  class="help-icon" 
+                  (click)="toggleAyuda('usuario')"
+                  aria-label="Ayuda sobre el campo usuario"
+                  tabindex="0">
+            <i class="bi bi-question-circle"></i>
+          </button>
+        </label>
+        
+        <!-- Ayuda contextual -->
+        <div *ngIf="mostrarAyudaUsuario" class="help-tooltip" role="tooltip">
+          <p><strong>¿Cómo inicio sesión?</strong></p>
+          <ul>
+            <li>Ingresa tu email de registro</li>
+            <li>Para admin usa: <code>admin</code></li>
+            <li>Mínimo 3 caracteres</li>
+          </ul>
+        </div>
+
+        <div class="input-group">
+          <span class="input-icon">
+            <i class="bi bi-person-fill"></i>
+          </span>
+          <input
+            id="usuario"
+            formControlName="usuario"
+            type="text"
+            placeholder="Ingresa tu usuario o email"
+            class="form-control"
+            [ngClass]="{ 
+              'is-invalid': errores.usuario,
+              'is-valid': loginForm.get('usuario')?.valid && loginForm.get('usuario')?.touched
+            }"
+            [attr.aria-invalid]="errores.usuario ? 'true' : 'false'"
+            [attr.aria-describedby]="errores.usuario ? 'usuario-error' : null"
+            autocomplete="username"
+            [disabled]="bloqueado || cargandoLogin"
+            required
+          />
+        </div>
+        
+        <div *ngIf="errores.usuario" 
+             id="usuario-error" 
+             class="validation-error" 
+             role="alert">
+          <i class="bi bi-exclamation-circle"></i>
+          <span>{{ errores.usuario }}</span>
+        </div>
+      </div>
+
+      <!-- Campo Contraseña -->
+      <div class="form-group">
+        <label for="contrasena" class="form-label">
+          Contraseña
+          <button type="button" 
+                  class="help-icon" 
+                  (click)="toggleAyuda('password')"
+                  aria-label="Ayuda sobre el campo contraseña"
+                  tabindex="0">
+            <i class="bi bi-question-circle"></i>
+          </button>
+        </label>
+
+        <!-- Ayuda contextual -->
+        <div *ngIf="mostrarAyudaPassword" class="help-tooltip" role="tooltip">
+          <p><strong>Requisitos de contraseña:</strong></p>
+          <ul>
+            <li>Mínimo 6 caracteres</li>
+            <li>Para admin: <code>admin123</code></li>
+            <li>¿Olvidaste tu contraseña? Usa el enlace de recuperación</li>
+          </ul>
+        </div>
+
+        <div class="input-group">
+          <span class="input-icon">
+            <i class="bi bi-lock-fill"></i>
+          </span>
+          <input
+            id="contrasena"
+            formControlName="contrasena"
+            [type]="mostrarPassword ? 'text' : 'password'"
+            placeholder="Ingresa tu contraseña"
+            class="form-control"
+            [ngClass]="{ 
+              'is-invalid': errores.contrasena,
+              'is-valid': loginForm.get('contrasena')?.valid && loginForm.get('contrasena')?.touched
+            }"
+            [attr.aria-invalid]="errores.contrasena ? 'true' : 'false'"
+            [attr.aria-describedby]="errores.contrasena ? 'contrasena-error' : null"
+            autocomplete="current-password"
+            [disabled]="bloqueado || cargandoLogin"
+            required
+          />
+          <button type="button" 
+                  class="toggle-password" 
+                  (click)="togglePasswordVisibility('login')"
+                  [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                  tabindex="0">
+            <i [ngClass]="mostrarPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+          </button>
+        </div>
+        
+        <div *ngIf="errores.contrasena" 
+             id="contrasena-error" 
+             class="validation-error" 
+             role="alert">
+          <i class="bi bi-exclamation-circle"></i>
+          <span>{{ errores.contrasena }}</span>
+        </div>
+      </div>
+
+      <!-- Botón de inicio de sesión -->
+      <button type="submit" 
+              class="btn btn-primary w-100"
+              [disabled]="bloqueado || cargandoLogin"
+              [attr.aria-busy]="cargandoLogin">
+        <span *ngIf="!cargandoLogin">Iniciar sesión</span>
+        <span *ngIf="cargandoLogin" class="loading-spinner">
+          <i class="bi bi-arrow-clockwise spin"></i>
+          Iniciando sesión...
+        </span>
+      </button>
+
+      <div class="auth-divider"><span></span></div>
+
+      <div class="links">
+        <!-- Enlace de recuperación de contraseña -->
+        <button type="button" 
+                (click)="abrirModalRecuperacion()" 
+                class="auth-link"
+                [disabled]="bloqueado"
+                aria-label="Recuperar contraseña olvidada">
+          <i class="bi bi-key"></i> ¿Olvidaste tu contraseña?
+        </button>
+        
+        <!-- Enlace de registro -->
+        <button type="button" 
+                (click)="irARegistro()" 
+                class="link-text"
+                aria-label="Crear cuenta nueva">
+          Crear una cuenta nueva
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<app-accessibility-menu></app-accessibility-menu>
+
+<!-- Pie de página abajo -->
+<footer class="auth-footer">
+  <app-footer></app-footer>
+</footer>
+
+<!-- Modal de Recuperación de Contraseña -->
+<div *ngIf="mostrarModalRecuperacion" 
+     class="modal-overlay" 
+     (click)="cerrarModalRecuperacion()"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="modal-title">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" 
+            (click)="cerrarModalRecuperacion()"
+            aria-label="Cerrar modal"
+            type="button">
+      <i class="bi bi-x-lg"></i>
+    </button>
+
+    <div class="modal-header">
+      <i class="bi bi-shield-lock modal-icon"></i>
+      <h2 id="modal-title">Recuperar Contraseña</h2>
+    </div>
+
+    <div class="modal-body">
+      <!-- Paso 1: Ingresar Email -->
+      <div *ngIf="pasoRecuperacion === 'email'" class="recovery-step">
+        <p class="step-description">
+          <strong>⚠️ NOTA IMPORTANTE:</strong><br>
+          Este es un sistema de <strong>DEMOSTRACIÓN</strong>. El código NO se envía por email real.
+          El código de 6 dígitos aparecerá en la <strong>CONSOLA DEL NAVEGADOR</strong> (presiona F12 para verlo).
+        </p>
+        <p class="step-description" style="background: #e3f2fd; border-left-color: #2196F3;">
+          Ingresa tu email de registro y te mostraremos un código de verificación en la consola.
+        </p>
+        <div class="form-group">
+          <label for="email-recuperacion" class="form-label">Email</label>
+          <div class="input-group">
+            <span class="input-icon">
+              <i class="bi bi-envelope-fill"></i>
+            </span>
+            <input
+              id="email-recuperacion"
+              type="email"
+              [(ngModel)]="emailRecuperacion"
+              placeholder="tu-email@ejemplo.com"
+              class="form-control"
+              autocomplete="email"
+              [disabled]="cargandoRecuperacion"
+              required
+            />
+          </div>
+        </div>
+        <button type="button"
+                class="btn btn-primary w-100"
+                (click)="enviarCodigoRecuperacion()"
+                [disabled]="cargandoRecuperacion">
+          <span *ngIf="!cargandoRecuperacion">
+            <i class="bi bi-send"></i> Generar Código
+          </span>
+          <span *ngIf="cargandoRecuperacion" class="loading-spinner">
+            <i class="bi bi-arrow-clockwise spin"></i> Generando...
+          </span>
+        </button>
+      </div>
+
+      <!-- Paso 2: Verificar Código -->
+      <div *ngIf="pasoRecuperacion === 'codigo'" class="recovery-step">
+        <p class="step-description" style="background: #fff3cd; border-left-color: #ffc107; color: #856404;">
+          <strong>🔍 BUSCA EN LA CONSOLA:</strong><br>
+          Presiona <kbd>F12</kbd> en tu teclado, ve a la pestaña <strong>Console</strong> y busca:<br>
+          <code style="background: #212529; color: #4ade80; padding: 0.25rem 0.5rem; border-radius: 3px; display: inline-block; margin-top: 0.5rem;">
+            Código de recuperación generado: XXXXXX
+          </code>
+        </p>
+        <p class="step-description">
+          Hemos generado un código de 6 dígitos para <strong>{{ emailRecuperacion }}</strong>
+        </p>
+        <div class="form-group">
+          <label for="codigo-verificacion" class="form-label">Código de Verificación</label>
+          <div class="input-group">
+            <span class="input-icon">
+              <i class="bi bi-shield-check"></i>
+            </span>
+            <input
+              id="codigo-verificacion"
+              type="text"
+              [(ngModel)]="codigoRecuperacion"
+              placeholder="000000"
+              class="form-control text-center"
+              maxlength="6"
+              pattern="[0-9]{6}"
+              autocomplete="one-time-code"
+              required
+              style="font-size: 1.5rem; font-weight: 700; letter-spacing: 0.5rem;"
+            />
+          </div>
+          <small class="form-hint">
+            <i class="bi bi-info-circle"></i> 
+            Ingresa el código que aparece en la consola del navegador
+          </small>
+        </div>
+        <button type="button"
+                class="btn btn-primary w-100"
+                (click)="verificarCodigoRecuperacion()">
+          <i class="bi bi-check-circle"></i> Verificar Código
+        </button>
+        <button type="button"
+                class="btn btn-secondary w-100 mt-2"
+                (click)="pasoRecuperacion = 'email'">
+          <i class="bi bi-arrow-left"></i> Generar Nuevo Código
+        </button>
+      </div>
+
+      <!-- Paso 3: Nueva Contraseña -->
+      <div *ngIf="pasoRecuperacion === 'nueva-password'" class="recovery-step">
+        <p class="step-description" style="background: #d4edda; border-left-color: #28a745; color: #155724;">
+          <strong>✅ Código Verificado Correctamente</strong><br>
+          Ahora puedes establecer una nueva contraseña para tu cuenta.
+        </p>
+        <p class="step-description">
+          Ingresa tu nueva contraseña. Debe tener al menos 6 caracteres.
+        </p>
+        
+        <div class="form-group">
+          <label for="nueva-password" class="form-label">Nueva Contraseña</label>
+          <div class="input-group">
+            <span class="input-icon">
+              <i class="bi bi-lock-fill"></i>
+            </span>
+            <input
+              id="nueva-password"
+              [type]="mostrarNuevaPassword ? 'text' : 'password'"
+              [(ngModel)]="nuevaPassword"
+              placeholder="Mínimo 6 caracteres"
+              class="form-control"
+              autocomplete="new-password"
+              minlength="6"
+              [disabled]="cargandoRecuperacion"
+              required
+            />
+            <button type="button" 
+                    class="toggle-password" 
+                    (click)="togglePasswordVisibility('nueva')"
+                    [attr.aria-label]="mostrarNuevaPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+              <i [ngClass]="mostrarNuevaPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmar-password" class="form-label">Confirmar Contraseña</label>
+          <div class="input-group">
+            <span class="input-icon">
+              <i class="bi bi-lock-fill"></i>
+            </span>
+            <input
+              id="confirmar-password"
+              [type]="mostrarConfirmarPassword ? 'text' : 'password'"
+              [(ngModel)]="confirmarPassword"
+              placeholder="Repite la contraseña"
+              class="form-control"
+              autocomplete="new-password"
+              [disabled]="cargandoRecuperacion"
+              required
+            />
+            <button type="button" 
+                    class="toggle-password" 
+                    (click)="togglePasswordVisibility('confirmar')"
+                    [attr.aria-label]="mostrarConfirmarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+              <i [ngClass]="mostrarConfirmarPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="button"
+                class="btn btn-primary w-100"
+                (click)="restablecerPassword()"
+                [disabled]="cargandoRecuperacion">
+          <span *ngIf="!cargandoRecuperacion">
+            <i class="bi bi-check-circle"></i> Restablecer Contraseña
+          </span>
+          <span *ngIf="cargandoRecuperacion" class="loading-spinner">
+            <i class="bi bi-arrow-clockwise spin"></i> Actualizando...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

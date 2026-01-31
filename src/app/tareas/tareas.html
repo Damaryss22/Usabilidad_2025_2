@@ -1,0 +1,33 @@
+<div class="task-card">
+  <div class="task-header">
+    <div class="task-info">
+      <div class="task-title-row">
+        <h3 class="task-name">{{ task.nombre }}</h3>
+        <span class="status-badge" [ngClass]="getStatusClass()">
+          {{ getStatusIcon() }}
+        </span>
+      </div>
+      <p class="task-subject">{{ task.materia }}</p>
+      <div class="task-details">
+        <span class="task-date">
+          📅 {{ task.fechaEntrega }}
+        </span>
+        <span class="task-grade" *ngIf="task.calificacion > 0">
+          Calificación: <strong>{{ task.calificacion }}%</strong>
+        </span>
+      </div>
+    </div>
+    <span class="priority-badge" [ngClass]="getPriorityClass()">
+      {{ task.prioridad.toUpperCase() }}
+    </span>
+  </div>
+
+  <div *ngIf="task.necesitaAyuda" class="help-section">
+    <p class="help-message">
+      ⚠️ Sugerencia de ayuda
+    </p>
+    <button class="help-button" (click)="onRequestHelp()">
+      Solicitar Ayuda
+    </button>
+  </div>
+</div>
